@@ -97,7 +97,22 @@ O **OdontoClinic** é um sistema web desenvolvido em PHP puro com MySQL para aut
 
 ### Tabela: cargos
 
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | INT (PK) | Identificador único |
+| `nome` | VARCHAR(50) | Nome do cargo (ex: Administrador, Dentista) |
+
 ### Tabela: usuarios
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | INT (PK) | Identificador único |
+| `nome` | VARCHAR(100) | Nome completo |
+| `email` | VARCHAR(100) | E-mail de login (único) |
+| `senha` | VARCHAR(255) | Senha (atualmente texto puro para dev) |
+| `cargo` | INT (FK) | Vínculo com tabela `cargos` |
+| `ativo` | TINYINT(1) | Status do usuário (1=Ativo, 0=Inativo) |
+| `data_criacao` | TIMESTAMP | Data de cadastro (automático) |
 
 🔒 Atenção (Ambiente de Produção): Em versão final, as senhas serão criptografadas com password_hash() e validadas com password_verify().
 
