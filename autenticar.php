@@ -4,21 +4,44 @@ require_once("conexao.php");
 $email = $_POST['email'];
 $senha = $_POST['senha'];
 
-$query  = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email AND senha = :senha");
+$query = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email LIMIT 1");
 $query->bindValue(":email", "$email");
-$query->bindValue(":senha", "$senha");
 $query->execute();
-$res    = $query->fetchAll(PDO::FETCH_ASSOC);
-$linhas = count($res);
-if ($linhas > 0) {
-    echo "Logado!";
+$usuario = $query->fetch(PDO::FETCH_ASSOC);
+
+if ($usuario) {
+    if (password_verify($senha, $usuario['senha'])) {
+
+        $_SESSION['id_user']       = $usuario['id'];
+        $_SESSION['nome_user']     = $usuario['nome'];
+        $_SESSION['id_cargo_user'] = $usuario['cargo'];
+        $id_cargo_user             = $usuario['cargo'];
+
+        $cargo = $pdo->prepare("SELECT nome FROM cargos WHERE id = :id_cargo_user LIMIT 1");
+        $cargo->bindValue(":id_cargo_user", "$id_cargo_user", PDO::PARAM_INT);
+        $cargo->execute();
+        $cargo_result = $cargo->fetch(PDO::FETCH_ASSOC);
+
+        if ($cargo_result && $cargo_result['nome'] === 'Administrador') {
+            echo '<script>window.location="painel-adm"</script>';
+            exit;
+        } else {
+            echo '<script>window.alert("Nível de usuário não permitido!")</script>';
+            echo '<script>window.location="index.php"</script>';
+            exit;
+        }
+    } else {
+        echo '<script>window.alert("Dados incorretos!")</script>';
+        echo '<script>window.location="index.php"</script>';
+        exit;
+    }
 } else {
     $conta_usuarios = $pdo->prepare("SELECT COUNT(*) as total FROM usuarios");
     $conta_usuarios->execute();
     $total_usuarios = $conta_usuarios->fetch(PDO::FETCH_ASSOC)['total'];
-    
+
     if ($total_usuarios == 0) {
-        $verifica_cargo = $pdo->prepare("SELECT id FROM cargos WHERE nome = :nome LIMIT 1");    
+        $verifica_cargo = $pdo->prepare("SELECT id FROM cargos WHERE nome = :nome LIMIT 1");
         $verifica_cargo->bindValue(":nome", "Administrador");
         $verifica_cargo->execute();
         $cargo_existente = $verifica_cargo->fetch(PDO::FETCH_ASSOC);
@@ -36,6 +59,7 @@ if ($linhas > 0) {
         $nome_fake   = "Usuário";
         $email_fake  = "usuario@email.com";
         $senha_fake  = "123";
+        $senha_hash  = password_hash($senha_fake, PASSWORD_DEFAULT);
         $telefone_fake = "(19) 99999-9999";
         $cep_fake    = "13843-184";
         $rua_fake    = "Mococa";
@@ -53,7 +77,7 @@ if ($linhas > 0) {
 
         $insert->bindValue(":nome", "$nome_fake");
         $insert->bindValue(":email", "$email_fake");
-        $insert->bindValue(":senha", "$senha_fake");
+        $insert->bindValue(":senha", "$senha_hash");
         $insert->bindValue(":cargo", "$cargo_fake", PDO::PARAM_INT); // ID dinâmico do Administrador
         $insert->bindValue(":telefone", "$telefone_fake");
         $insert->bindValue(":cep", "$cep_fake");
@@ -73,6 +97,6 @@ if ($linhas > 0) {
     } else {
         echo '<script>window.alert("Dados incorretos!")</script>';
         echo '<script>window.location="index.php"</script>';
+        exit;
     }
 }
-?>

@@ -13,5 +13,7 @@
         echo "Erro ao conectar ao banco de dados!<br>" . $e;
     }
 
+    $nome_sistema = 'FG Odontologia e Estética';
+    $email_sistema = 'o.implantare@gmail.com';
     
 ?>
