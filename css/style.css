@@ -65,3 +65,7 @@ body {
 .userLogin {
     margin-bottom: 20px;
 }
+
+.table-primary {
+    padding: 15px;
+}

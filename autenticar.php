@@ -67,7 +67,7 @@ if ($usuario) {
         $bairro_fake = "Itacolomy";
         $cidade_fake = "Mogi Guaçu";
         $estado_fake = "SP";
-        $foto_fake   = " ";
+        $foto_fake   = "sem-foto.jpg";
         $ativo_fake  = 1;
 
         $insert = $pdo->prepare("INSERT INTO usuarios 

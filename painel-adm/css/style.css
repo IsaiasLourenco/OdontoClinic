@@ -4040,6 +4040,17 @@ ul.bt-list li a {
     font-size: 10px;
 }
 
+.centro-pequeno {
+  text-align: center;
+  font-size: 10px;
+  color: red;
+}
+
+.centro {
+  display: block;
+  text-align: center;
+}
+
 /* ICONS */
 /* Icon Back */
 .hvr-icon-back {

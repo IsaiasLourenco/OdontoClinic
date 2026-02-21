@@ -9,6 +9,35 @@ if(@$_GET['pagina'] != ""){
 	$pagina = 'home';
 }
 
+$id_usuario = $_SESSION['id_user'];
+
+$query = $pdo->prepare("SELECT * FROM usuarios WHERE id = :id LIMIT 1");
+$query->bindValue(":id", $id_usuario);
+$query->execute();
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$linhas = count($res);
+if($linhas > 0){
+	$nome_usuario = $res[0]['nome'];
+	$email_usuario = $res[0]['email'];
+	$senha_usuario = $res[0]['senha'];
+	$id_cargo_usuario = $res[0]['cargo'];
+	$telefone_usuario = $res[0]['telefone'];
+	$cpf_usuario = $res[0]['cpf'];
+	$cep_usuario = $res[0]['cep'];
+	$rua_usuario = $res[0]['rua'];
+	$numero_usuario = $res[0]['numero'];
+	$bairro_usuario = $res[0]['bairro'];
+	$cidade_usuario = $res[0]['cidade'];
+	$estado_usuario = $res[0]['estado'];
+	$foto_usuario = $res[0]['foto'];
+
+	$cargo = $pdo->prepare("SELECT * FROM cargos WHERE id = :id_cargo");
+	$cargo->bindValue(":id_cargo", $id_cargo_usuario);
+	$cargo->execute();
+	$res_cargo = $cargo->fetchAll(PDO::FETCH_ASSOC);
+	$nome_cargo_usuario = $res_cargo[0]['nome'];
+}
+
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -18,7 +47,11 @@ if(@$_GET['pagina'] != ""){
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" href="../img/icone.ico" type="image/x-icon">
 
-	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<script type="application/x-javascript"> 
+			addEventListener("load", function() { 
+				setTimeout(hideURLbar, 0); }, false); function 
+				hideURLbar(){ window.scrollTo(0,1); } 
+	</script>
 
 	<!-- Bootstrap Core CSS -->
 	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
@@ -92,14 +125,13 @@ if(@$_GET['pagina'] != ""){
 				}
 			});
 
-
 		});
 
 	</script>
 	<!-- //pie-chart --><!-- index page sales reviews visitors pie chart -->
-
 	
 </head> 
+
 <body class="cbp-spmenu-push">
 	<div class="main-content">
 		<div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
@@ -113,7 +145,14 @@ if(@$_GET['pagina'] != ""){
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<h1><a class="navbar-brand" href="index.php"><span class="fa fa-tooth"></span> Sistema<span class="dashboard_text"><?php echo $nome_sistema?></span></a></h1>
+						<h1>
+							<a class="navbar-brand" href="index.php">
+								<span class="fa fa-tooth"></span> Sistema
+									<span class="dashboard_text">
+										<?php echo $nome_sistema?>
+								</span>
+							</a>
+						</h1>
 					</div>
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="sidebar-menu">
@@ -130,8 +169,7 @@ if(@$_GET['pagina'] != ""){
 									<i class="fa fa-angle-left pull-right"></i>
 								</a>
 								<ul class="treeview-menu">
-									<li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
-									
+									<li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>									
 								</ul>
 							</li>
 
@@ -198,9 +236,6 @@ if(@$_GET['pagina'] != ""){
 								</li>
 							</ul>
 						</li>
-						
-
-
 					</ul>
 					<div class="clearfix"> </div>
 				</div>
@@ -215,8 +250,8 @@ if(@$_GET['pagina'] != ""){
 								<div class="profile_img">	
 									<span class="prfil-img"><img src="images/perfil/sem-foto.jpg" alt="" width="50px" height="50px"> </span> 
 									<div class="user-name esc">
-										<p>Nome Usuário</p>
-										<span>Nível Usuário</span>
+										<p><?= $nome_usuario ?></p>
+										<span><?= $nome_cargo_usuario ?></span>
 									</div>
 									<i class="fa fa-angle-down lnr"></i>
 									<i class="fa fa-angle-up lnr"></i>
@@ -226,7 +261,7 @@ if(@$_GET['pagina'] != ""){
 							<ul class="dropdown-menu drp-mnu">
 								<li> <a href="" data-toggle="modal" data-target="#modalConfig"><i class="fa fa-cog"></i> Configurações</a> </li> 
 								<li> <a href="" data-toggle="modal" data-target="#modalPerfil"><i class="fa fa-user"></i> Perfil</a> </li> 								
-								<li> <a href="../logout.php"><i class="fa fa-sign-out"></i> Sair</a> </li>
+								<li> <a href="logout.php"><i class="fa fa-sign-out"></i> Sair</a> </li>
 							</ul>
 						</li>
 					</ul>
@@ -237,9 +272,6 @@ if(@$_GET['pagina'] != ""){
 		</div>
 		<!-- //header-ends -->
 
-
-
-
 		<!-- main content start-->
 		<div id="page-wrapper">
 			<?php 
@@ -247,19 +279,13 @@ if(@$_GET['pagina'] != ""){
 			?>
 		</div>
 
-
-
-
-
 	</div>
 
 	<!-- new added graphs chart js-->
 	
 	<script src="js/Chart.bundle.js"></script>
 	<script src="js/utils.js"></script>
-	
-	
-	
+		
 	<!-- Classie --><!-- for toggle left push menu script -->
 	<script src="js/classie.js"></script>
 	<script>
@@ -273,7 +299,6 @@ if(@$_GET['pagina'] != ""){
 			classie.toggle( menuLeft, 'cbp-spmenu-open' );
 			disableOther( 'showLeftPush' );
 		};
-
 
 		function disableOther( button ) {
 			if( button !== 'showLeftPush' ) {
@@ -294,429 +319,472 @@ if(@$_GET['pagina'] != ""){
 		$('.sidebar-menu').SidebarNav()
 	</script>
 	<!-- //side nav js -->
-	
-	
-	
+		
 	<!-- Bootstrap Core JavaScript -->
 	<script src="js/bootstrap.js"> </script>
 	<!-- //Bootstrap Core JavaScript -->
 
-
-
 	<!-- Mascaras JS -->
-<script type="text/javascript" src="../../js/mascaras.js"></script>
+<script type="text/javascript" src="../js/mascaras.js"></script>
+<script type="text/javascript" src="../js/buscaCepModal.js"></script>
+<script type="text/javascript" src="../js/validarCNPJ.js"></script>
+<script type="text/javascript" src="../js/validarCPF.js"></script>
 
 <!-- Ajax para funcionar Mascaras JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script> 
 
+<!-- Datatables -->
+<link href="https://cdn.datatables.net/v/dt/dt-2.3.7/datatables.min.css" rel="stylesheet" 
+	  integrity="sha384-wCnlGUpaekN+Mtc+qIoipdqIqe2dvC7hWyzVg8wajZ1sxKnVTbnyBd7pyx7JT0Su" crossorigin="anonymous"> 
+<script src="https://cdn.datatables.net/v/dt/dt-2.3.7/datatables.min.js" 
+		integrity="sha384-aQ8I1X2x8U0AR8D7C4Ah0OvZlwMslQdN5YDAQBA56jXrrhcECijs/i7H+5DDrlV1" crossorigin="anonymous"></script>
+
 	
 </body>
+
+
+
 </html>
 
-
-
-
-
-
-<!-- Modal Perfil -->
+<!-- Modal Perfil-->
 <div class="modal fade" id="modalPerfil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="exampleModalLabel">Alterar Dados</h4>
-				<button id="btn-fechar-perfil" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form id="form-perfil">
-			<div class="modal-body">
-				
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Alterar Dados</h4>
+                <button id="btn-fechar-perfil" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-perfil">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="nome">Nome</label>
+                            <input type="text" class="form-control" id="nome-perfil" name="nome" value="<?php echo $nome_usuario ?>" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email">E-mail</label>
+                            <input type="email" class="form-control" id="email-perfil" name="email" value="<?php echo $email_usuario ?>" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="cpf">CPF</label>
+                            <input type="text" class="form-control cpf" id="cpf-perfil" name="cpf" value="<?php echo $cpf_usuario ?>" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefone">Telefone</label>
+                            <input type="text" class="form-control" id="telefone-perfil" name="telefone" value="<?php echo $telefone_usuario ?>">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label for="cep">CEP</label>
+                            <input type="text" class="form-control" id="cep-perfil" name="cep" value="<?php echo $cep_usuario ?>" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="rua">Rua</label>
+                            <input type="text" class="form-control" id="rua-perfil" name="rua" value="<?php echo $rua_usuario ?>" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="numero">Número</label>
+                            <input type="text" class="form-control" id="numero-perfil" name="numero" value="<?php echo $numero_usuario ?>" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label for="bairro">Bairro</label>
+                            <input type="text" class="form-control" id="bairro-perfil" name="bairro" value="<?php echo $bairro_usuario ?>" readonly>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" class="form-control" id="cidade-perfil" name="cidade" value="<?php echo $cidade_usuario ?>" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="estado">Estado</label>
+                            <input type="text" class="form-control" id="estado-perfil" name="estado" value="<?php echo $estado_usuario ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="senha">Senha</label>
+                            <input type="password" class="form-control" id="senha-perfil" name="senha" value="<?php echo $senha_usuario ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="conf-senha">Confirmar Senha</label>
+                            <input type="password" class="form-control" id="conf-senha-perfil" name="conf-senha">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="nivel">Nível</label>
+                            <?php if ($nome_cargo_usuario  == 'Administrador') { ?>
+                                <select class="form-control" name="nivel" id="nivel">
+                                    <?php
+                                    $query = $pdo->query("SELECT * FROM cargos ORDER BY nome asc");
+                                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                                    $total_reg = @count($res);
 
-					<div class="row">
-						<div class="col-md-6">							
-								<label>Nome</label>
-								<input type="text" class="form-control" id="nome_perfil" name="nome" placeholder="Seu Nome" value="<?php echo $nome_usuario ?>" required>							
-						</div>
-
-						<div class="col-md-6">							
-								<label>Email</label>
-								<input type="email" class="form-control" id="email_perfil" name="email" placeholder="Seu Nome" value="<?php echo $email_usuario ?>" required>							
-						</div>
-					</div>
-
-
-					<div class="row">
-						<div class="col-md-6">							
-								<label>Telefone</label>
-								<input type="text" class="form-control" id="telefone_perfil" name="telefone" placeholder="Seu Telefone" value="<?php echo $telefone_usuario ?>" required>							
-						</div>
-
-						<div class="col-md-6">							
-								<label>CPF</label>
-								<input type="text" class="form-control" id="cpf_perfil" name="cpf" placeholder="Seu CPF" value="<?php echo $cpf_usuario ?>">							
-						</div>
-					</div>
-
-
-
-					<div class="row">
-						<div class="col-md-6">							
-								<label>Senha</label>
-								<input type="password" class="form-control" id="senha_perfil" name="senha" placeholder="Senha" value="<?php echo $senha_usuario ?>" required>							
-						</div>
-
-						<div class="col-md-6">							
-								<label>Confirmar Senha</label>
-								<input type="password" class="form-control" id="conf_senha_perfil" name="conf_senha" placeholder="Confirmar Senha" value="" required>							
-						</div>
-					</div>
-
-
-					<div class="row">
-						<div class="col-md-6">							
-								<label>Foto</label>
-								<input type="file" class="form-control" id="foto_perfil" name="foto" value="<?php echo $foto_usuario ?>" onchange="carregarImgPerfil()">							
-						</div>
-
-						<div class="col-md-6">								
-							<img src="images/perfil/<?php echo $foto_usuario ?>"  width="80px" id="target-usu">								
-							
-						</div>
-
-						
-					</div>
-
-
-					<input type="hidden" name="id_usuario" value="<?php echo $id_usuario ?>">
-				
-
-				<br>
-				<small><div id="msg-perfil" align="center"></div></small>
-			</div>
-			<div class="modal-footer">       
-				<button type="submit" class="btn btn-primary">Salvar</button>
-			</div>
-			</form>
-		</div>
-	</div>
+                                    if ($total_reg > 0) {
+                                        for ($i = 0; $i < $total_reg; $i++) {
+                                            echo '<option value="' . $res[$i]['id'] . '">' . $res[$i]['nome'] . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="0">Cadastre um Cargo</option>';
+                                    }
+                                    ?>
+                                </select>
+                            <?php } else { ?>
+                                <input type="text" class="form-control" id="nivel-perfil"
+                                    name="nivel" value="<?= $nome_cargo_usuario  ?>" readonly>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="ativo">Ativo</label>
+                            <select class="form-control" name="ativo" id="ativo">
+                                <option value="Sim" selected>Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="foto">Foto</label>
+                            <input type="file" class="form-control" id="foto-perfil" name="foto" onchange="carregarImgPerfil()">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="./images/perfil/<?php echo $foto_usuario ?>" alt="Foto do usuário" style="width: 80px;" id="target-usu">
+                        </div>
+                        <input type="hidden" name="id-usuario" value="<?php echo $id_usuario ?>">
+                    </div>
+                </div>
+                <div id="msg-perfil" class="centro"></div>
+                <div class="modal-footer centro">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+<!-- Fim Modal Perfil-->
 
-
-
-
-
-
-
-
-<!-- Modal Config -->
+<!-- Modal Config-->
 <div class="modal fade" id="modalConfig" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="exampleModalLabel">Editar Configurações</h4>
-				<button id="btn-fechar-config" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form id="form-config">
-			<div class="modal-body">
-				
-
-					<div class="row">
-						<div class="col-md-3">							
-								<label>Nome do Projeto</label>
-								<input type="text" class="form-control" id="nome_sistema" name="nome_sistema" placeholder="Delivery Interativo" value="<?php echo @$nome_sistema ?>" required>							
-						</div>
-
-						<div class="col-md-3">							
-								<label>Email Sistema</label>
-								<input type="email" class="form-control" id="email_sistema" name="email_sistema" placeholder="Email do Sistema" value="<?php echo @$email_sistema ?>" >							
-						</div>
-
-
-						<div class="col-md-3">							
-								<label>Telefone Sistema</label>
-								<input type="text" class="form-control" id="telefone_sistema" name="telefone_sistema" placeholder="Telefone do Sistema" value="<?php echo @$telefone_sistema ?>" required>							
-						</div>
-
-						<div class="col-md-3">							
-								<label>Telefone Fixo</label>
-								<input type="text" class="form-control" id="telefone_fixo" name="telefone_fixo" placeholder="Telefone Fixo" value="<?php echo @$telefone_fixo ?>" >							
-						</div>
-					</div>
-
-
-					<div class="row">
-						<div class="col-md-6">							
-								<label>Endereço <small>(Rua Número Bairro e Cidade)</small></label>
-								<input type="text" class="form-control" id="endereco_sistema" name="endereco_sistema" placeholder="Rua X..." value="<?php echo @$endereco_sistema ?>" >							
-						</div>
-
-						<div class="col-md-6">							
-								<label>Instagram</label>
-								<input type="text" class="form-control" id="instagram_sistema" name="instagram_sistema" placeholder="Link do Instagram" value="<?php echo @$instagram_sistema ?>">							
-						</div>
-					</div>
-
-
-
-					<div class="row">
-						<div class="col-md-3">							
-								<label>Tipo Relatório</label>
-								<select class="form-control" name="tipo_rel">
-									<option value="PDF" <?php if(@$tipo_rel == 'PDF'){?> selected <?php } ?> >PDF</option>
-									<option value="HTML" <?php if(@$tipo_rel == 'HTML'){?> selected <?php } ?> >HTML</option>
-								</select>							
-						</div>
-
-						
-
-					</div>
-
-
-					
-
-					
-
-					<div class="row">
-						<div class="col-md-4">						
-								<div class="form-group"> 
-									<label>Logo (*PNG)</label> 
-									<input class="form-control" type="file" name="foto-logo" onChange="carregarImgLogo();" id="foto-logo">
-								</div>						
-							</div>
-							<div class="col-md-2">
-								<div id="divImg">
-									<img src="../../img/<?php echo $logo_sistema ?>"  width="80px" id="target-logo">									
-								</div>
-							</div>
-
-
-							<div class="col-md-4">						
-								<div class="form-group"> 
-									<label>Ícone (*Png)</label> 
-									<input class="form-control" type="file" name="foto-icone" onChange="carregarImgIcone();" id="foto-icone">
-								</div>						
-							</div>
-							<div class="col-md-2">
-								<div id="divImg">
-									<img src="../../img/<?php echo $favicon_sistema ?>"  width="50px" id="target-icone">									
-								</div>
-							</div>
-
-						
-					</div>
-
-
-
-
-					<div class="row">
-							<div class="col-md-4">						
-								<div class="form-group"> 
-									<label>Logo Relatório (*Jpg)</label> 
-									<input class="form-control" type="file" name="foto-logo-rel" onChange="carregarImgLogoRel();" id="foto-logo-rel">
-								</div>						
-							</div>
-							<div class="col-md-2">
-								<div id="divImg">
-									<img src="../../img/<?php echo @$logo_rel ?>"  width="80px" id="target-logo-rel">									
-								</div>
-							</div>
-
-
-						
-					</div>					
-				
-
-				<br>
-				<small><div id="msg-config" align="center"></div></small>
-			</div>
-			<div class="modal-footer">       
-				<button type="submit" class="btn btn-primary">Salvar</button>
-			</div>
-			</form>
-		</div>
-	</div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Editar Configurações</h4>
+                <button id="btn-fechar-config" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-config">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="nome_sistema">Nome do Sistema</label>
+                            <input type="text" class="form-control" id="nome_sistema" name="nome_sistema" value="<?php echo $nome_sistema ?>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_sistema">E-mail do Sistema</label>
+                            <input type="email" class="form-control" id="email_sistema" name="email_sistema" value="<?php echo $email_sistema ?>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="telefone_sistema">Telefone do Sistema</label>
+                            <input type="text" class="form-control" id="telefone_sistema" name="telefone_sistema" value="<?php echo $telefone_sistema ?>" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="cnpj_sistema">CNPJ</label>
+                            <input type="text" class="form-control cnpj" name="cnpj" value="<?php echo $cnpj_sistema ?>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="telefone_fixo">Telefone Fixo</label>
+                            <input type="text" class="form-control" id="telefone_fixo" name="telefone_fixo" value="<?php echo $telefone_fixo ?>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="cep-sistema">CEP</label>
+                            <input type="text" class="form-control" id="cep-sistema" name="cep-sistema" value="<?php echo $cep_sistema ?>" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label for="rua-sistema">Rua</label>
+                            <input type="text" class="form-control" id="rua-sistema" name="rua-sistema" value="<?php echo $rua_sistema ?>" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="numero-sistema">Número</label>
+                            <input type="text" class="form-control" id="numero-sistema" name="numero-sistema" value="<?php echo $numero_sistema ?>" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="bairro-sistema">Bairro</label>
+                            <input type="text" class="form-control" id="bairro-sistema" name="bairro-sistema" value="<?php echo $bairro_sistema ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" class="form-control" id="cidade-sistema" name="cidade-sistema" value="<?php echo $cidade_sistema ?>" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="estado-sistema">Estado</label>
+                            <input type="text" class="form-control" id="estado-sistema" name="estado-sistema" value="<?php echo $estado_sistema ?>" readonly>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="instagram">Instagram</label>
+                            <input type="text" class="form-control" id="instagram" name="instagram" value="<?php echo $instagram_sistema ?>">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="tipoRel">Tipo Relatório</label>
+                            <select class="form-control" name="tipoRel">
+                                <option value="PDF" <?php if ($tipo_relatorio == 'PDF') { ?> selected <?php } ?>>PDF</option>
+                                <option value="HTML" <?php if ($tipo_relatorio == 'HTML') { ?> selected <?php } ?>>HTML</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="pedidos">Contato Whatsapp</label>
+                            <select class="form-control" name="contatoZap">
+                                <option value="Sim" <?php if ($contatoZap == 'Sim') { ?> selected <?php } ?>>Sim</option>
+                                <option value="Não" <?php if ($contatoZap == 'Não') { ?> selected <?php } ?>>Não</option>
+                            </select>
+                        </div>
+						<div class="col-md-3">
+                            <label for="dev">Desenvolvedor</label>
+                            <input type="text" class="form-control" id="dev" name="dev" value="<?php echo $desenvolvedor ?>">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="site">Site</label>
+                            <input type="text" class="form-control" id="site" name="site" value="<?php echo $site_dev ?>">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="url_sistema">URL para Relatório</label>
+                            <input type="text" class="form-control" id="url_sistema" name="url_sistema"
+                                value="<?php echo $url_sistema ?>">
+                        </div>
+						<div class="col-md-4">
+                            <label for="chave_pix">Chave PIX</label>
+                            <input type="text" class="form-control" id="chave_pix" name="chave_pix"
+                                value="<?php echo $chave_pix ?>">
+                        </div>
+						<div class="col-md-2">
+                            <label for="tipo_chave">Tipo Chave</label>
+                            <select class="form-control" name="tipo_chave">
+                                <option value="CNPJ" <?php if ($tipo_chave == 'CNPJ') { ?> selected <?php } ?>>CNPJ</option>
+                                <option value="CPF" <?php if ($tipo_chave == 'CPF') { ?> selected <?php } ?>>CPF</option>
+                                <option value="Email" <?php if ($tipo_chave == 'Email') { ?> selected <?php } ?>>Email</option>
+                                <option value="Telefone" <?php if ($tipo_chave == 'Telefone') { ?> selected <?php } ?>>Telefone</option>
+                                <option value="Codigo" <?php if ($tipo_chave == 'Codigo') { ?> selected <?php } ?>>Codigo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="logotipo">Logotipo(*.png)</label>
+                            <input type="file" class="form-control" id="logotipo" name="logotipo" onchange="carregarImgLogotipo()">
+                        </div>
+                        <div class="col-md-2">
+                            <img src="../../img/<?php echo $logotipo; ?>" alt="Logotipo" style="width: 80px;" id="target-logo">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="icone">Ícone(*.png)</label>
+                            <input type="file" class="form-control" id="icone" name="icone" onchange="carregarImgIcone()">
+                        </div>
+                        <div class="col-md-2">
+                            <img src="../../img/<?php echo $icone ?>" alt="Icone" style="width: 80px;" id="target-ico">
+                        </div>
+                        <input type="hidden" name="id" value="<?php echo $id_sistema ?>">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="logo_rel">Logotipo Relatório(*.jpg)</label>
+                            <input type="file" class="form-control" id="logo-rel" name="logo_rel" onchange="carregarImgLogoRel()">
+                        </div>
+                        <div class="col-md-2">
+                            <img src="../../img/<?php echo $logo_rel; ?>" alt="Logotipo do Relatório" style="width: 80px;"
+                                id="target-logo-rel">
+                        </div>
+                    </div>
+                    <div id="msg-config" class="centro"></div>
+                </div>
+                <div class="modal-footer centro">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
-
-
-
-
+<!-- Fim Modal Config -->
 
 <script type="text/javascript">
 	function carregarImgPerfil() {
     var target = document.getElementById('target-usu');
-    var file = document.querySelector("#foto_perfil").files[0];
-    
+    var file = document.querySelector("#foto-perfil").files[0];
         var reader = new FileReader();
-
         reader.onloadend = function () {
             target.src = reader.result;
         };
-
         if (file) {
             reader.readAsDataURL(file);
-
         } else {
             target.src = "";
         }
     }
 </script>
 
-
-
-
-
-
- <script type="text/javascript">
+<script type="text/javascript">
 	$("#form-perfil").submit(function () {
-
 		event.preventDefault();
 		var formData = new FormData(this);
-
 		$.ajax({
 			url: "editar-perfil.php",
 			type: 'POST',
 			data: formData,
-
 			success: function (mensagem) {
 				$('#msg-perfil').text('');
 				$('#msg-perfil').removeClass()
 				if (mensagem.trim() == "Editado com Sucesso") {
-
 					$('#btn-fechar-perfil').click();
 					location.reload();				
-						
-
 				} else {
-
 					$('#msg-perfil').addClass('text-danger')
 					$('#msg-perfil').text(mensagem)
 				}
-
-
 			},
-
 			cache: false,
 			contentType: false,
 			processData: false,
-
 		});
-
 	});
 </script>
 
-
-
-
-
-
- <script type="text/javascript">
+<script type="text/javascript">
 	$("#form-config").submit(function () {
-
 		event.preventDefault();
 		var formData = new FormData(this);
-
 		$.ajax({
 			url: "editar-config.php",
 			type: 'POST',
 			data: formData,
-
 			success: function (mensagem) {
 				$('#msg-config').text('');
 				$('#msg-config').removeClass()
 				if (mensagem.trim() == "Editado com Sucesso") {
-
 					$('#btn-fechar-config').click();
 					location.reload();				
-						
-
 				} else {
-
 					$('#msg-config').addClass('text-danger')
 					$('#msg-config').text(mensagem)
 				}
-
-
 			},
-
 			cache: false,
 			contentType: false,
 			processData: false,
-
 		});
-
 	});
 </script>
 
-
-
-
 <script type="text/javascript">
-	function carregarImgLogo() {
+	function carregarImgLogotipo() {
     var target = document.getElementById('target-logo');
-    var file = document.querySelector("#foto-logo").files[0];
-    
+    var file = document.querySelector("#logotipo").files[0];    
         var reader = new FileReader();
-
         reader.onloadend = function () {
             target.src = reader.result;
         };
-
         if (file) {
             reader.readAsDataURL(file);
-
         } else {
             target.src = "";
         }
     }
 </script>
-
-
-
-
 
 <script type="text/javascript">
 	function carregarImgLogoRel() {
     var target = document.getElementById('target-logo-rel');
-    var file = document.querySelector("#foto-logo-rel").files[0];
-    
+    var file = document.querySelector("#logo-rel").files[0];    
         var reader = new FileReader();
-
         reader.onloadend = function () {
             target.src = reader.result;
         };
-
         if (file) {
             reader.readAsDataURL(file);
-
         } else {
             target.src = "";
         }
     }
 </script>
 
-
-
-
-
 <script type="text/javascript">
 	function carregarImgIcone() {
-    var target = document.getElementById('target-icone');
-    var file = document.querySelector("#foto-icone").files[0];
-    
+    var target = document.getElementById('target-ico');
+    var file = document.querySelector("#icone").files[0];    
         var reader = new FileReader();
-
         reader.onloadend = function () {
             target.src = reader.result;
         };
-
         if (file) {
             reader.readAsDataURL(file);
-
         } else {
             target.src = "";
         }
     }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // Validação de CPF para qualquer campo com classe .cpf
+        document.querySelectorAll(".cpf").forEach(campo => {
+            campo.addEventListener("blur", function() {
+                const valor = this.value.trim();
+                if (valor === "") return;
+
+                if (!validarCPF(valor)) {
+                    marcarErro(this, "CPF inválido");
+                    this.value = "";
+                    this.focus();
+                }
+            });
+        });
+
+        // Validação de CNPJ para qualquer campo com classe .cnpj
+        document.querySelectorAll(".cnpj").forEach(campo => {
+            campo.addEventListener("blur", function() {
+                const valor = this.value.trim();
+                if (valor === "") return;
+
+                if (!validarCNPJ(valor)) {
+                    marcarErro(this, "CNPJ inválido");
+                    this.value = "";
+                    this.focus();
+                }
+            });
+        });
+
+        // Função de erro visual
+        function marcarErro(campo, mensagem) {
+            campo.style.border = "2px solid red";
+
+            let msg = document.createElement("div");
+            msg.className = "erro-campo";
+            msg.style.color = "red";
+            msg.style.fontSize = "12px";
+            msg.textContent = mensagem;
+
+            campo.parentNode.appendChild(msg);
+
+            setTimeout(() => {
+                campo.style.border = "";
+                msg.remove();
+            }, 3000);
+        }
+
+    });
 </script>
