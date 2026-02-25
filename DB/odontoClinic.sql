@@ -28,3 +28,29 @@ ADD CONSTRAINT fk_cargo
 FOREIGN KEY (cargo) REFERENCES cargos(id) 
 ON DELETE SET NULL 
 ON UPDATE CASCADE;
+
+CREATE TABLE configuracoes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome_sistema VARCHAR(100),
+    email_sistema VARCHAR(100),
+    cnpj_sistema VARCHAR(20),
+    telefone_sistema VARCHAR(20),
+    telefone_fixo VARCHAR(20),
+    cep_sistema VARCHAR(10),
+    rua_sistema VARCHAR(100),
+    numero_sistema VARCHAR(10),
+    bairro_sistema VARCHAR(100),
+    cidade_sistema VARCHAR(100),
+    estado_sistema VARCHAR(2),
+    instagram_sistema VARCHAR(200),
+    tipo_relatorio VARCHAR(10),
+    contatoZap VARCHAR(3),
+    desenvolvedor VARCHAR(100),
+    site_dev VARCHAR(200),
+    url_sistema VARCHAR(200),
+    chave_pix VARCHAR(100),
+    tipo_chave VARCHAR(20),
+    logotipo VARCHAR(100),
+    icone VARCHAR(100),
+    logo_rel VARCHAR(100)
+);

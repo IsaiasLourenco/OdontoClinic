@@ -12,6 +12,12 @@ $usuario = $query->fetch(PDO::FETCH_ASSOC);
 if ($usuario) {
     if (password_verify($senha, $usuario['senha'])) {
 
+        if ($usuario['ativo'] !== 'Sim') {
+            echo '<script>window.alert("Usuário inativo! Entre em contato com o administrador.")</script>';
+            echo '<script>window.location="index.php"</script>';
+            exit;
+        }
+
         $_SESSION['id_user']       = $usuario['id'];
         $_SESSION['nome_user']     = $usuario['nome'];
         $_SESSION['id_cargo_user'] = $usuario['cargo'];
@@ -68,7 +74,7 @@ if ($usuario) {
         $cidade_fake = "Mogi Guaçu";
         $estado_fake = "SP";
         $foto_fake   = "sem-foto.jpg";
-        $ativo_fake  = 1;
+        $ativo_fake  = 'Sim';
 
         $insert = $pdo->prepare("INSERT INTO usuarios 
                 (nome, email, senha, cargo, telefone, cep, rua, numero, bairro, cidade, estado, foto, ativo, data_criacao) 
