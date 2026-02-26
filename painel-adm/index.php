@@ -176,6 +176,17 @@ if ($linhas > 0) {
                                     <li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
                                 </ul>
                             </li>
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa-solid fa-folder-plus"></i>
+                                    <span>Cadastros</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="index.php?pagina=grupo_acessos"><i class="fa fa-angle-right"></i> Grupos</a></li>
+                                    <li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Acessos</a></li>
+                                </ul>
+                            </li>
 
                         </ul>
                     </div>
@@ -279,9 +290,30 @@ if ($linhas > 0) {
         <!-- main content start-->
         <div id="page-wrapper">
             <?php
-            require_once('paginas/' . $pagina . '.php');
+            $pagina = @$_GET['pagina'] ?: 'home';
+            $arquivo = __DIR__ . '/paginas/' . $pagina . '.php';
+
+            echo "<!-- DEBUG: Buscando: $arquivo -->";
+
+            if (file_exists($arquivo)) {
+                echo "<!-- ✅ Arquivo existe -->";
+                require_once $arquivo;
+            } else {
+                echo "<!-- ❌ NÃO existe. Arquivos na pasta: -->";
+                $pasta = __DIR__ . '/paginas/';
+                foreach (glob($pasta . '*') as $f) {
+                    echo "<!-- • " . basename($f) . " -->";
+                }
+            }
             ?>
         </div>
+
+        <!-- main content start-->
+        <!-- <div id="page-wrapper">
+            <?php
+            require_once('paginas/' . $pagina . '.php');
+            ?>
+        </div> -->
 
     </div>
 

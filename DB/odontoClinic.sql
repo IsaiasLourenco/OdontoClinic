@@ -54,3 +54,15 @@ CREATE TABLE configuracoes (
     icone VARCHAR(100),
     logo_rel VARCHAR(100)
 );
+
+CREATE TABLE grupo_acessos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome_grupo VARCHAR(25)
+);
+
+CREATE TABLE acessos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    chave VARCHAR(50) NOT NULL,
+    grupo INT NOT NULL
+);
