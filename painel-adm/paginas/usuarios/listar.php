@@ -150,7 +150,7 @@ HTML;
 
 
                     <a class="{$mostrar_adm}" href="#" onclick="permissoes('{$id}', 
-                                                                                '{$nome}')" title="Dar Permissões">
+                                                                           '{$nome}')" title="Dar Permissões">
                                                                                     <i class="fa fa-lock text-success ico-grande"></i>
                     </a>
 
@@ -326,6 +326,65 @@ HTML;
         listarPermissoes(id);
     }
 
+    function listarPermissoes(id) {
+        $.ajax({
+            url: 'paginas/' + pag + "/listar_permissoes.php",
+            method: 'POST',
+            data: {
+                id
+            },
+            dataType: "html",
+
+            success: function(result) {
+                $('#listar_permissoes').html(result);
+                $('#mensagem_permissao').text('');
+            }
+        });
+    }
+
+    function adicionarPermissoes(id, acesso) {
+        $.ajax({
+            url: 'paginas/' + pag + "/add_permissoes.php",
+            method: 'POST',
+            data: {
+                id: id,
+                acesso: acesso
+            },
+            dataType: "text",
+            success: function(result) {
+                // Só recarrega a lista se a gravação confirmou
+                if (result.trim() === 'inserido' || result.trim() === 'removido') {
+                    listarPermissoes(id);
+                } else {
+                    console.log('Erro ao salvar permissão: ' + result);
+                    $('#mensagem_permissao').addClass('text-danger').text('Erro ao salvar: ' + result);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('Erro AJAX: ' + error);
+                $('#mensagem_permissao').addClass('text-danger').text('Erro de conexão');
+            }
+        });
+    }''
+
+    function marcarTodos() {
+        var id_usuario = $('#id_permissoes').val();
+        var marcado = $('#input_todos').is(':checked'); // ← Verifica se está marcado
+
+        $.ajax({
+            url: 'paginas/' + pag + "/add_all_permissoes.php",
+            method: 'POST',
+            data: {
+                id: id_usuario,
+                acao: marcado ? 'marcar_todos' : 'desmarcar_todos' // ← Envia a ação correta
+            },
+            dataType: "html",
+            success: function(result) {
+                listarPermissoes(id_usuario);
+            }
+        });
+    }
+
     function excluir(id) {
         $.ajax({
             url: 'paginas/' + pag + "/excluir.php",
@@ -345,6 +404,4 @@ HTML;
             }
         });
     }
-
-    
 </script>

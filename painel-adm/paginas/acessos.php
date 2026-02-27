@@ -2,7 +2,7 @@
 require_once('../conexao.php');
 require_once('verificar.php');
 
-$pag = 'grupo_acessos';
+$pag = 'acessos';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -119,13 +119,13 @@ $pag = 'grupo_acessos';
 
     <a onclick="inserir()" href="#" type="button" class="btn btn-primary">
         <span class="fa fa-plus"></span>
-        Grupo
+        Acesso
     </a>
 
     <li class="dropdown head-dpdn2" style="display: inline-block;"  id="btn-deletar">
         <a href="#" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
             <span class="fa-solid fa-trash-can text-whiter"></span>
-                Excluir Grupo
+                Excluir Acesso
         </a>
 
         <ul class="dropdown-menu">
@@ -161,7 +161,7 @@ $pag = 'grupo_acessos';
 <!-- Modal Inserir-->
 <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content modal-lg">
             <div class="modal-header">
                 <h4 class="modal-title"><span id="titulo_inserir"></span></h4>
                 <button id="btn-fechar" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
@@ -171,11 +171,28 @@ $pag = 'grupo_acessos';
             <form id="form" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label for="nome">Nome</label>
                             <input type="text" class="form-control" id="nome-perfil" name="nome" required>
                         </div>
-                        <div class="col-md-6 mt-22">
+                        <div class="col-md-3">
+                            <label for="nome">Chave</label>
+                            <input type="text" class="form-control" id="chave" name="chave" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="nome">Grupo</label>
+                            <select class="form-control" name="grupo" id="grupo">
+                                <option value="0">Sem Grupos</option>
+                                <?php
+                                $grupos = $pdo->query("SELECT * FROM grupo_acessos ORDER BY nome_grupo ASC");
+                                $grupos = $grupos->fetchAll(PDO::FETCH_ASSOC);
+                                foreach ($grupos as $grupo) {
+                                    echo "<option value='{$grupo['id']}'>{$grupo['nome_grupo']}</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mt-22">
                             <button type="submit" class="btn btn-primary">Salvar</button>
                             <input type="hidden" name="id" id="id">
                         </div>

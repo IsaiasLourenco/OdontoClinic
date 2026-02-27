@@ -28,14 +28,12 @@ if ($usuario) {
         $cargo->execute();
         $cargo_result = $cargo->fetch(PDO::FETCH_ASSOC);
 
-        if ($cargo_result && $cargo_result['nome'] === 'Administrador') {
-            echo '<script>window.location="painel-adm"</script>';
-            exit;
-        } else {
-            echo '<script>window.alert("Nível de usuário não permitido!")</script>';
-            echo '<script>window.location="index.php"</script>';
-            exit;
-        }
+        // ✅ Permite login de qualquer usuário ativo (ADM, Dentista, Recepcionista, etc.)
+        $nome_usuario = $usuario['nome'];
+
+        // Redireciona para o painel principal
+        echo '<script>window.location="painel-adm"</script>';
+        exit;
     } else {
         echo '<script>window.alert("Dados incorretos!")</script>';
         echo '<script>window.location="index.php"</script>';

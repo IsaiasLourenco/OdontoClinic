@@ -2,7 +2,7 @@
 require_once('../conexao.php');
 require_once('verificar.php');
 
-$pag = 'grupo_acessos';
+$pag = 'cargos';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -119,13 +119,13 @@ $pag = 'grupo_acessos';
 
     <a onclick="inserir()" href="#" type="button" class="btn btn-primary">
         <span class="fa fa-plus"></span>
-        Grupo
+        Cargo
     </a>
 
-    <li class="dropdown head-dpdn2" style="display: inline-block;"  id="btn-deletar">
+    <li class="dropdown head-dpdn2" style="display: inline-block;" id="btn-deletar">
         <a href="#" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
             <span class="fa-solid fa-trash-can text-whiter"></span>
-                Excluir Grupo
+            Excluir Cargo
         </a>
 
         <ul class="dropdown-menu">
@@ -175,12 +175,12 @@ $pag = 'grupo_acessos';
                             <label for="nome">Nome</label>
                             <input type="text" class="form-control" id="nome-perfil" name="nome" required>
                         </div>
-                        <div class="col-md-6 mt-22">
-                            <button type="submit" class="btn btn-primary">Salvar</button>
-                            <input type="hidden" name="id" id="id">
-                        </div>
                     </div>
                     <div id="mensagem" class="centro-pequeno"></div>
+                </div>
+                <div class="modal-footer centro">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <input type="text" name="id" id="id">
                 </div>
             </form>
         </div>
@@ -189,4 +189,4 @@ $pag = 'grupo_acessos';
 </div>
 <!-- Fim Modal Inserir-->
 
-    <script src="../js/ajax.js"></script>
+<script src="../js/ajax.js"></script>

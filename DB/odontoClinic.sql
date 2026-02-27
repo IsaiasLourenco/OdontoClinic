@@ -66,3 +66,9 @@ CREATE TABLE acessos (
     chave VARCHAR(50) NOT NULL,
     grupo INT NOT NULL
 );
+
+CREATE TABLE permissoes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario INT NOT NULL,
+    permissao INT NOT NULL
+);

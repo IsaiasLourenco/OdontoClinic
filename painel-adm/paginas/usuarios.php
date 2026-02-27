@@ -16,27 +16,20 @@ $pag = 'usuarios';
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <style>
         /* === Apenas a tabela #tabela e seus controles DataTables === */
-
-        /* A própria tabela */
         #tabela.tabela-pequena,
         #tabela.tabela-pequena th,
         #tabela.tabela-pequena td {
             font-size: 12px !important;
         }
-
-        /* Wrapper do DataTables específico para #tabela */
         #tabela_wrapper {
             font-size: 12px !important;
             line-height: 1.4 !important;
         }
-
-        /* Controles: busca, seleção de registros */
         #tabela_wrapper .dataTables_length,
         #tabela_wrapper .dataTables_filter {
             font-size: 12px !important;
             margin-bottom: 5px !important;
         }
-
         #tabela_wrapper .dataTables_length select,
         #tabela_wrapper .dataTables_filter input {
             font-size: 12px !important;
@@ -47,8 +40,6 @@ $pag = 'usuarios';
             width: auto !important;
             max-width: 80px !important;
         }
-
-        /* Labels dos controles */
         #tabela_wrapper .dataTables_length label,
         #tabela_wrapper .dataTables_filter label {
             font-size: 12px !important;
@@ -58,20 +49,15 @@ $pag = 'usuarios';
             align-items: center !important;
             gap: 5px !important;
         }
-
-        /* Texto de informação */
         #tabela_wrapper .dataTables_info {
             font-size: 12px !important;
             padding-top: 5px !important;
             line-height: 1.4 !important;
         }
-
-        /* Botões de paginação */
         #tabela_wrapper .dataTables_paginate {
             font-size: 12px !important;
             padding-top: 5px !important;
         }
-
         #tabela_wrapper .dataTables_paginate .paginate_button {
             font-size: 12px !important;
             padding: 3px 8px !important;
@@ -81,17 +67,13 @@ $pag = 'usuarios';
             line-height: 1.2 !important;
             border-radius: 2px !important;
         }
-
         #tabela_wrapper .dataTables_paginate .paginate_button.current,
         #tabela_wrapper .dataTables_paginate .paginate_button:hover {
             font-size: 12px !important;
         }
-
-        /* Ajuste de layout para os controles */
         #tabela_wrapper .row {
             margin: 0 !important;
         }
-
         #tabela_wrapper .col-sm-6,
         #tabela_wrapper .col-sm-12 {
             padding: 0 !important;
@@ -99,10 +81,7 @@ $pag = 'usuarios';
             float: none !important;
             text-align: center !important;
         }
-
-        /* Responsivo */
         @media (max-width: 768px) {
-
             #tabela_wrapper .dataTables_length,
             #tabela_wrapper .dataTables_filter,
             #tabela_wrapper .dataTables_info,
@@ -122,14 +101,12 @@ $pag = 'usuarios';
         Usuário
     </a>
 
-    <li class="dropdown head-dpdn2" style="display: inline-block;"  id="btn-deletar">
+    <li class="dropdown head-dpdn2" style="display: inline-block;" id="btn-deletar">
         <a href="#" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
             <span class="fa-solid fa-trash-can text-whiter"></span>
-                Excluir User
+            Excluir User
         </a>
-
         <ul class="dropdown-menu">
-
             <li>
                 <div class="notification_desc2">
                     <p>Confirmar Exclusão?
@@ -142,20 +119,16 @@ $pag = 'usuarios';
         </ul>
     </li>
 
-    <div class="bs-example widget-shadow table-primary" id="listar">
-
-    </div>
+    <div class="bs-example widget-shadow table-primary" id="listar"></div>
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         var pag = "<?php echo $pag; ?>"
     </script>
-
     <input type="hidden" id="ids">
 
 </body>
-
 </html>
 
 <!-- Modal Inserir-->
@@ -236,8 +209,6 @@ $pag = 'usuarios';
                                 $total_reg = @count($res);
                                 if ($total_reg > 0) {
                                     for ($i = 0; $i < $total_reg; $i++) {
-                                        foreach ($res[$i] as $key => $value) {
-                                        }
                                         echo '<option value="' . $res[$i]['id'] . '">' . $res[$i]['nome'] . '</option>';
                                     }
                                 } else {
@@ -273,7 +244,6 @@ $pag = 'usuarios';
         </div>
     </div>
 </div>
-</div>
 <!-- Fim Modal Inserir-->
 
 <!-- Modal Dados-->
@@ -281,21 +251,20 @@ $pag = 'usuarios';
     <div class="modal-dialog" role="document">
         <div class="modal-content modal-lg">
             <div class="modal-header">
-                <h4 class="modal-title" id="nome_dados-cli"><span id="nome_dados-cli"></span></h4>
+                <h4 class="modal-title"><span id="nome_dados-cli"></span></h4>
                 <button id="btn-fechar-dados-cli" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Adicione esta row após o nome, antes do CPF -->
                 <div class="row br-btt">
                     <div class="col-md-6">
                         <span><b>Email: </b></span>
-                        <span id="email_dados-cli"></span> <!-- ← Novo campo -->
+                        <span id="email_dados-cli"></span>
                     </div>
                     <div class="col-md-6">
                         <span><b>Nível: </b></span>
-                        <span id="cargo_dados-cli"></span> <!-- ← Novo campo -->
+                        <span id="cargo_dados-cli"></span>
                     </div>
                 </div>
                 <div class="row br-btt">
@@ -349,12 +318,42 @@ $pag = 'usuarios';
                     </div>
                 </div>
                 <div class="row text-center mt-3">
-                    <img id="foto_dados-cli" src="images/perfil/"
-                        style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                    <img id="foto_dados-cli" src="images/perfil/" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
                 </div>
             </div>
         </div>
     </div>
-    <!-- Fim Modal Dados-->
+</div>
+<!-- Fim Modal Dados-->
 
-    <script src="../js/ajax.js"></script>
+<!-- Modal Permissões -->
+<div class="modal fade" id="modalPermissoes" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Usuário: <span id="nome_permissoes"></span>
+                    <span class="absolute-right">
+                        <input class="form-check-input" type="checkbox" id="input_todos" onchange="marcarTodos()">
+                        <label for="input_todos">Marcar Todos</label>
+                    </span>
+                </h4>
+                <button type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="listar_permissoes">
+
+                </div>
+                <br>
+                <input type="hidden" name="id" id="id_permissoes">
+                <div id="mensagem_permissao" class="mt-3 centro-pequeno"></div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- Fim Modal Permissões -->
+
+<script src="../js/ajax.js"></script>

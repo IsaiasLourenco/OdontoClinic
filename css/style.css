@@ -73,3 +73,35 @@ body {
 .mt-22 {
     margin-top: 22px;
 }
+
+.ocultar {
+    display: none !important;
+}
+
+.absolute-right {
+    position: absolute;
+    right: 35px;    
+}
+
+.font-permissoes {
+    font-size: 13px;
+}
+
+.recuperar a {
+    font-size: 13px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.recuperar {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.centro-pequeno {
+  text-align: center;
+  font-size: 10px;
+  color: red;
+}

@@ -1,5 +1,5 @@
 <?php
-$tabela = 'grupo_acessos';
+$tabela = 'acessos';
 require_once("../../../conexao.php");
 
 $query = $pdo->query("SELECT * FROM $tabela ORDER BY id DESC");
@@ -11,8 +11,9 @@ if ($linhas > 0) {
     <table class="table table-hover tabela-pequena" id="tabela">
         <thead> 
             <tr> 
+                <th>Nome do Acesso</th>
+                <th>Chave</th>
                 <th>Nome do Grupo</th>
-                <th>Acessos</th>
                 <th>Ações</th>
             </tr> 
         </thead> 
@@ -21,36 +22,39 @@ HTML;
 
     for ($i = 0; $i < $linhas; $i++) {
         $id = $res[$i]['id'];
-        $nome_grupo = htmlspecialchars($res[$i]['nome_grupo']);
-        $acessos = $pdo->query("SELECT * FROM acessos WHERE grupo = '$id'");
+        $nome = htmlspecialchars($res[$i]['nome']);
+        $chave = htmlspecialchars($res[$i]['chave']);
+        $grupo = htmlspecialchars($res[$i]['grupo']);
+        $acessos = $pdo->query("SELECT * FROM grupo_acessos WHERE id = '$grupo'");
         $result = $acessos->fetchAll(PDO::FETCH_ASSOC);
-        $total_acessos = count($result);
+        $nome_grupo = $result[0]['nome_grupo'] ?? 'Sem Grupos';
         echo <<<HTML
             <tr>
-                <td><input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">{$nome_grupo}</td>
-                <td>{$total_acessos}</td>
+                <td><input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">&nbsp;{$nome}</td>
+                <td>{$chave}</td>
+                <td>{$nome_grupo}</td>
                 <td>
-                    <a href="#" onclick="editar('{$id}', '{$nome_grupo}')" title="Editar">
+                    <a href="#" onclick="editar('{$id}', '{$nome}', '{$chave}', '{$grupo}')" title="Editar">
                         <i class="fa fa-edit text-primary ico-grande"></i>
                     </a>
-                    <li class="dropdown head-dpdn2" style="display: inline-block;">
-		                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Excluir Registro">
-                            <i class="fa-solid fa-trash-can text-danger ico-grande"></i>
-                        </a>
+                    	<li class="dropdown head-dpdn2" style="display: inline-block;">
+		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Excluir Registro">
+                                <i class="fa-solid fa-trash-can text-danger ico-grande"></i>
+                            </a>
 
-		                <ul class="dropdown-menu" style="margin-left:-230px;">
+		                    <ul class="dropdown-menu" style="margin-left:-230px;">
 
-		                    <li>
-		                        <div class="notification_desc2">
-		                            <p>Confirmar Exclusão? 
-                                        <a href="#" onclick="excluir('{$id}')">
-                                            <span class="text-danger">Sim</span>
-                                        </a>
-                                    </p>
-		                        </div>
-		                    </li>										
-		                </ul>
-                    </li>
+	    	                    <li>
+		                            <div class="notification_desc2">
+		                                <p>Confirmar Exclusão? 
+                                            <a href="#" onclick="excluir('{$id}')">
+                                                <span class="text-danger">Sim</span>
+                                            </a>
+                                        </p>
+		                            </div>
+		                        </li>										
+		                    </ul>
+                        </li>
                 </td>
             </tr>
 HTML;
@@ -83,11 +87,13 @@ HTML;
         $('#tabela_wrapper').addClass('tabela-pequena');
     });
 
-    function editar(id, nome_grupo) {
+    function editar(id, nome, chave, grupo) {
         $('#mensagem').text('');
         $('#titulo_inserir').text('Editar Grupo');
         $('#id').val(id);
-        $('#nome-perfil').val(nome_grupo);
+        $('#nome-perfil').val(nome);
+        $('#chave').val(chave);
+        $('#grupo').val(grupo).change();
         $('#modalForm').modal('show');
     }
 
@@ -111,6 +117,8 @@ HTML;
     function limparCampos() {
         $('#id').val('');
         $('#nome-perfil').val('');
+        $('#chave').val('');
+        $('#grupo').val(0).change();
 
         $('#btn-deletar').hide();
         $('#ids').val('');

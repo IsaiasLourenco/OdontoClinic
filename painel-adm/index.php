@@ -3,10 +3,33 @@ session_start();
 require_once("../conexao.php");
 require_once("verificar.php");
 
+// Valores padrão: Admin vê tudo
+$home = '';
+$configuracoes = '';
+$usuarios = '';
+$grupo_acessos = '';
+$acessos = '';
+$cargos = '';
+$menu_pessoas = '';
+$menu_cadastros = '';
+$pag_inicial = 'home';
+
+$id_cargo_user = $_SESSION['id_cargo_user'];
+$query_cargo = $pdo->prepare("SELECT nome FROM cargos WHERE id = :id_cargo_user LIMIT 1");
+$query_cargo->bindValue(":id_cargo_user", "$id_cargo_user", PDO::PARAM_INT);
+$query_cargo->execute();
+$res_cargo = $query_cargo->fetch(PDO::FETCH_ASSOC);
+$nome_cargo_usuario = $res_cargo['nome'];
+
+$pag_inicial = 'home';
+if ($nome_cargo_usuario != 'Administrador') {
+    require_once("verificar_permissoes.php");
+}
+
 if (@$_GET['pagina'] != "") {
     $pagina = @$_GET['pagina'];
 } else {
-    $pagina = 'home';
+    $pagina = $pag_inicial;
 }
 
 $id_usuario = $_SESSION['id_user'];
@@ -161,12 +184,12 @@ if ($linhas > 0) {
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="sidebar-menu">
                             <li class="header-nav-title">MENU NAVEGAÇÃO</li>
-                            <li class="treeview">
+                            <li class="treeview <?php echo $home ?>">
                                 <a href="index.php">
                                     <i class="fa fa-home"></i> <span>Home</span>
                                 </a>
                             </li>
-                            <li class="treeview">
+                            <li class="treeview <?php echo $menu_pessoas ?>">
                                 <a href="#">
                                     <i class="fa fa-users"></i>
                                     <span>Pessoas</span>
@@ -176,18 +199,24 @@ if ($linhas > 0) {
                                     <li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
                                 </ul>
                             </li>
-                            <li class="treeview">
+                            <li class="treeview <?php echo $menu_cadastros ?>">
                                 <a href="#">
                                     <i class="fa-solid fa-folder-plus"></i>
                                     <span>Cadastros</span>
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li><a href="index.php?pagina=grupo_acessos"><i class="fa fa-angle-right"></i> Grupos</a></li>
-                                    <li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Acessos</a></li>
+                                    <?php if ($cargos != 'ocultar') { ?>
+                                        <li><a href="index.php?pagina=cargos"><i class="fa fa-angle-right"></i> Cargos</a></li>
+                                    <?php } ?>
+                                    <?php if ($grupo_acessos != 'ocultar') { ?>
+                                        <li><a href="index.php?pagina=grupo_acessos"><i class="fa fa-angle-right"></i> Grupos</a></li>
+                                    <?php } ?>
+                                    <?php if ($acessos != 'ocultar') { ?>
+                                        <li><a href="index.php?pagina=acessos"><i class="fa fa-angle-right"></i> Acessos</a></li>
+                                    <?php } ?>
                                 </ul>
                             </li>
-
                         </ul>
                     </div>
                     <!-- /.navbar-collapse -->
@@ -274,8 +303,12 @@ if ($linhas > 0) {
                                 </div>
                             </a>
                             <ul class="dropdown-menu drp-mnu">
-                                <li> <a href="" data-toggle="modal" data-target="#modalConfig"><i class="fa fa-cog"></i> Configurações</a> </li>
-                                <li> <a href="" data-toggle="modal" data-target="#modalPerfil"><i class="fa fa-user"></i> Perfil</a> </li>
+                                <?php if ($configuracoes != 'ocultar') { ?>
+                                    <li> <a href="" data-toggle="modal" data-target="#modalConfig"><i class="fa fa-cog"></i> Configurações</a> </li>
+                                <?php } ?>
+                                <?php if ($configuracoes != 'ocultar') { ?>
+                                    <li> <a href="" data-toggle="modal" data-target="#modalPerfil"><i class="fa fa-user"></i> Perfil</a> </li>
+                                <?php } ?>
                                 <li> <a href="logout.php"><i class="fa fa-sign-out"></i> Sair</a> </li>
                             </ul>
                         </li>
@@ -290,7 +323,11 @@ if ($linhas > 0) {
         <!-- main content start-->
         <div id="page-wrapper">
             <?php
-            $pagina = @$_GET['pagina'] ?: 'home';
+            if (@$_GET['pagina'] != "") {
+                $pagina = @$_GET['pagina'];
+            } else {
+                $pagina = $pag_inicial;  // ← Usa o valor calculado pelo verificar_permissoes.php ✅
+            }
             $arquivo = __DIR__ . '/paginas/' . $pagina . '.php';
 
             echo "<!-- DEBUG: Buscando: $arquivo -->";

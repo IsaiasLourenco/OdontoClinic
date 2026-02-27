@@ -4046,6 +4046,10 @@ ul.bt-list li a {
   color: red;
 }
 
+.ocultar {
+    display: none !important;
+}
+
 .centro {
   display: block;
   text-align: center;
