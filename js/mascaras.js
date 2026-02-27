@@ -31,4 +31,7 @@ $(document).ready(function() {
     $('#telefone_sistema').mask('(00) 00000-0000');
 
     $('#cep-finalizar').mask('00000-000');
+
+    $('#cep-paciente').mask('00000-000');
+    $('#telefone-paciente').mask('(00) 00000-0000');
 });

@@ -72,3 +72,16 @@ CREATE TABLE permissoes (
     usuario INT NOT NULL,
     permissao INT NOT NULL
 );
+
+CREATE TABLE pacientes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    cpf VARCHAR(14) NOT NULL UNIQUE,
+    telefone VARCHAR(15) DEFAULT NULL,
+    cep VARCHAR(9) DEFAULT NULL,
+    rua VARCHAR(100) DEFAULT NULL,
+    numero VARCHAR(10) DEFAULT NULL,
+    bairro VARCHAR(100) DEFAULT NULL,
+    cidade VARCHAR(100) DEFAULT NULL,
+    estado VARCHAR(2) DEFAULT NULL
+);
