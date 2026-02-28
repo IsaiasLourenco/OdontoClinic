@@ -1,5 +1,5 @@
 <?php
-$tabela = 'usuarios';
+$tabela = 'receber';
 require_once("../../../conexao.php");
 
 $query = $pdo->query("SELECT * FROM $tabela ORDER BY id DESC");
@@ -15,11 +15,12 @@ if ($linhas > 0) {
 
 	        <tr> 
 
-	            <th>Nome</th>	
-	            <th class="esc">Telefone</th>	    
-	            <th class="esc">Email</th>	
-	            <th class="esc">Nível</th>	
-	            <th class="esc">Foto</th>	
+	            <th>Descrição</th>	
+	            <th class="esc">Paciente</th>	    
+	            <th class="esc">Data Lançamento</th>	
+	            <th class="esc">Data Pagmento</th>	
+	            <th class="esc">Valor</th>	
+	            <th class="esc">Arquivo</th>	
 	            <th>Ações</th>
 
 	        </tr> 
@@ -31,77 +32,76 @@ if ($linhas > 0) {
 HTML;
 
     for ($i = 0; $i < $linhas; $i++) {
-        $id = $res[$i]['id'];
-        $nome = $res[$i]['nome'];
-        $email = $res[$i]['email'];
-        $senha = $res[$i]['senha'];
-        $nivel = $res[$i]['cargo'];
-        $telefone = $res[$i]['telefone'];
-        $cpf = $res[$i]['cpf'];
-        $cep = $res[$i]['cep'];
-        $rua = $res[$i]['rua'];
-        $numero = $res[$i]['numero'];
-        $bairro = $res[$i]['bairro'];
-        $cidade = $res[$i]['cidade'];
-        $estado = $res[$i]['estado'];
-        $ativo = $res[$i]['ativo'];
-        $data = $res[$i]['data_criacao'];
-        $foto = $res[$i]['foto'];
+        $id                 = $res[$i]['id'];
+        $descricao          = $res[$i]['descricao'];
+        $paciente           = $res[$i]['paciente'];
+        $valor              = $res[$i]['valor'];
+        $valorF             = number_format('R$' . $valor, 2, ',', '.');
+        $data_vencimento    = $res[$i]['data_vencimento'];
+        $data_vencimentoF   = date('d/m/Y', strtotime($data_vencimento));
+        $data_lancamento    = $res[$i]['data_lancamento'];
+        $data_lancamentoF = date('d/m/Y', strtotime($data_lancamento));
+        $data_pagamento     = $res[$i]['data_pagamento'];
+        $data_pagamentoF    = date('d/m/Y', strtotime($data_pagamento));
+        $forma_pagamento    = $res[$i]['forma_pagamento'];
+        $frequencia         = $res[$i]['frequencia'];
+        $obs                = $res[$i]['obs'];
+        $arquivo            = $res[$i]['arquivo'];
+        $referencia         = $res[$i]['referencia'];
+        $id_referencia      = $res[$i]['id_referencia'];
+        $multa              = $res[$i]['multa'];
+        $juros              = $res[$i]['juros'];
+        $desconto           = $res[$i]['desconto'];
+        $subtotal           = $res[$i]['subtotal'];
 
-        $cargo = $pdo->prepare("SELECT * FROM cargos WHERE id = :id");
-        $cargo->bindValue(":id", $nivel);
-        $cargo->execute();
-        $res_cargo = $cargo->fetchAll(PDO::FETCH_ASSOC);
-        $cargo_nome = $res_cargo[0]['nome'] ?? 'Nível Desconecido';
-
-        $dataF = date('d/m/Y', strtotime($data));
-
-        if ($ativo == 'Sim') {
-            $icone = 'fa-square-check';
-            $titulo_link = 'Desativar Usuário';
-            $acao = 'Não';
-            $classe_ativo = '';
-        } else {
-            $icone = 'fa-square';
-            $titulo_link = 'Ativar Usuário';
-            $acao = 'Sim';
-            $classe_ativo = '#c4c4c4';
-        }
-
-        $mostrar_adm = '';
-        if ($cargo_nome == 'Administrador') {
-            $senha = '******';
-            $mostrar_adm = 'ocultar';
-        }
+        $paciente = $pdo->prepare("SELECT * FROM pacientes WHERE id = :paciente");
+        $paciente->bindValue(":id", $paciente);
+        $paciente->execute();
+        $res_paciente = $paciente->fetchAll(PDO::FETCH_ASSOC);
+        $paciente_nome = $res_paciente[0]['nome'] ?? 'Paciente Desconhecido';
+        
+        $consultar_nome_frequencia = $pdo->prepare("SELECT * FROM frequencias WHERE id = :frequencia");
+        $consultar_nome_frequencia->bindValue(":id", $frequencia);
+        $consultar_nome_frequencia->execute();
+        $res_frequencia = $consultar_nome_frequencia->fetchAll(PDO::FETCH_ASSOC);
+        $frequencia_nome = $res_frequencia[0]['nome'] ?? 'Frequência Desconhecida';
+        
+        $consultar_nome_forma = $pdo->prepare("SELECT * FROM forma_pagamento WHERE id = :forma_pagamento");
+        $consultar_nome_forma->bindValue(":id", $forma_pagamento);
+        $consultar_nome_forma->execute();
+        $res_forma = $consultar_nome_forma->fetchAll(PDO::FETCH_ASSOC);
+        $forma_pagamento_nome = $res_forma[0]['nome'] ?? 'Forma de Pagamento Desconhecida';
 
 
         echo <<<HTML
             <tr style="color:{$classe_ativo}">
                 <td>
                     <input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">
-                        {$nome}
+                        {$descricao}
                 </td>
-                <td class="esc">{$telefone}</td>
-                <td class="esc">{$email}</td>
-                <td class="esc">{$cargo_nome}</td>
-                <td class="esc"><img src="images/perfil/{$foto}" width="25px"></td>
+                <td class="esc">{$paciente_nome}</td>
+                <td class="esc">{$data_lancamentoF}</td>
+                <td class="esc">{$data_pagamentoF}</td>
+                <td class="esc">{$valorF}</td>
+                <td class="esc"><img src="images/receber/{$arquivo}" width="25px"></td>
                 <td>
 	                <a href="#" onclick="editar('{$id}',
-                                                '{$nome}',
-                                                '{$email}',
-                                                '{$senha}',
-                                                '{$nivel}',
-                                                '{$telefone}',
-                                                '{$cpf}',
-                                                '{$cep}',
-                                                '{$rua}',
-                                                '{$numero}',
-                                                '{$bairro}',
-                                                '{$cidade}',
-                                                '{$estado}',
-                                                '{$ativo}',
-                                                '{$dataF}',
-                                                '{$foto}')" title="Editar Dados">
+                                                '{$descricao}',
+                                                '{$paciente_nome}',
+                                                '{$valorF}',
+                                                '{$data_vencimentoF}',
+                                                '{$data_lancamentoF}',
+                                                '{$data_pagamentoF}',
+                                                '{$forma_pagamento_nome}',
+                                                '{$frequencia_nome}',
+                                                '{$obs}',
+                                                '{$arquivo}',
+                                                '{$referencia}',
+                                                '{$id_referencia}',
+                                                '{$multa}',
+                                                '{$juros}',
+                                                '{$desconto}',
+                                                '{$subtotal}')" title="Editar Dados">
                                                     <i class="fa fa-edit text-primary ico-grande"></i>
                     </a>
 
@@ -124,33 +124,32 @@ HTML;
 		                </ul>
                     </li>
 
-                    <a href="#" onclick="mostrar('{$nome}',
-                                                 '{$email}',
-                                                 '{$senha}',
-                                                '{$cargo_nome}',
-                                                '{$telefone}',
-                                                '{$cpf}',
-                                                '{$cep}',
-                                                '{$rua}',
-                                                '{$numero}',
-                                                '{$bairro}',
-                                                '{$cidade}',
-                                                '{$estado}',
-                                                '{$ativo}',
-                                                '{$dataF}',
-                                                '{$foto}')" title="Mostrar Dados">
+                    <a href="#" onclick="mostrar('{$descricao}',
+                                                 '{$paciente_nome}',
+                                                 '{$valorF}',
+                                                 '{$data_vencimentoF}',
+                                                 '{$data_lancamentoF}',
+                                                 '{$data_pagamentoF}',
+                                                 '{$forma_pagamento_nome}',
+                                                 '{$frequencia_nome}',
+                                                 '{$obs}',
+                                                 '{$arquivo}',
+                                                 '{$referencia}',
+                                                 '{$id_referencia}',
+                                                 '{$multa}',
+                                                 '{$juros}',
+                                                 '{$desconto}',
+                                                 '{$subtotal}')" title="Mostrar Dados">
                                                     <i class="fa fa-info-circle text-dark ico-grande"></i>
                     </a>
-
 
                     <a href="#" onclick="ativar('{$id}', 
                                                 '{$acao}')" title="{$titulo_link}">
                                                     <i class="fa {$icone} text-success ico-grande"></i>
                     </a>
 
-
                     <a class="{$mostrar_adm}" href="#" onclick="permissoes('{$id}', 
-                                                                           '{$nome}')" title="Dar Permissões">
+                                                                           '{$descricao}')" title="Dar Permissões">
                                                                                     <i class="fa fa-lock text-success ico-grande"></i>
                     </a>
 
@@ -187,69 +186,86 @@ HTML;
         $('#tabela_wrapper').addClass('tabela-pequena');
     });
 </script>
-
+'{$descricao}',
+                                                 '{$paciente_nome}',
+                                                 '{$valorF}',
+                                                 '{$data_vencimentoF}',
+                                                 '{$data_lancamentoF}',
+                                                 '{$data_pagamentoF}',
+                                                 '{$forma_pagamento_nome}',
+                                                 '{$frequencia_nome}',
+                                                 '{$obs}',
+                                                 '{$arquivo}',
+                                                 '{$referencia}',
+                                                 '{$id_referencia}',
+                                                 '{$multa}',
+                                                 '{$juros}',
+                                                 '{$desconto}',
+                                                 '{$subtotal}'
 <script type="text/javascript">
-    function editar(id, nome, email, senha, cargo_nome, telefone, cpf, cep, rua, numero, bairro, cidade, estado, ativo, data, foto) {
+    function editar(id, descricao, paciente, valor, data_vencimento, data_lancamento, data_pagamento, forma_pagamento, frequencia, obs, arquivo, referencia, 
+                    id_referencia, multa, juros, desconto, subtotal) {
         $('#mensagem').text('');
         $('#titulo_inserir').text('Editar Registro');
 
         $('#id').val(id);
-        $('#nome-perfil').val(nome);
-        $('#email-perfil').val(email);
-        $('#senha-perfil').val('');
-        $('#conf-senha-perfil').val('');
-        $('#telefone-perfil').val(telefone);
-        $('#cpf-perfil').val(cpf);
+        $('#descricao-perfil').val(descricao);
+        $('#paciente-perfil').val(paciente);
+        $('#valor-conta').val(valor);
+        $('#vencimento-conta').val(data_vencimento);
+        $('#lancamento-conta').val(data_lancamento);
+        $('#pagamento-conta').val(data_pagamento);
+        $('#forma_pagamento').val(forma_pagamento);
+        $('#frequencia').val(frequencia);
+        $('#obs-perfil').val(obs);
+        $('#arquivo-conta').val(arquivo);
+        $('#referencia-perfil').val(referencia);
+        $('#id-referencia-perfil').val(id_referencia);
+        $('#multa').val(multa);
+        $('#juros').val(juros);
+        $('#desconto').val(desconto);
+        $('#subtotal').val(subtotal);
 
-        // Endereço
-        $('#cep-perfil').val(cep);
-        $('#rua-perfil').val(rua);
-        $('#numero-perfil').val(numero);
-        $('#bairro-perfil').val(bairro);
-        $('#cidade-perfil').val(cidade);
-        $('#estado-perfil').val(estado);
-
-        // Cargo/Nível e status
-        $('#nivel').val(cargo_nome); // Se for select pelo nome, ou use o ID se tiver
-        $('#ativo').val(ativo);
-
-        // Data e foto
-        $('#data_dados').text(data); // Ajuste o ID conforme seu modal
-        $('#target-usu').attr("src", "images/perfil/" + foto);
+        $('#target-arquivo').attr("src", "images/receber/" + arquivo);
 
         // Abre o modal
         $('#modalForm').modal('show'); // Ou $('#modalPerfil').modal('show') se for o mesmo modal
     }
 
-    function mostrar(nome, email, senha, cargo_nome, telefone, cpf, cep, rua, numero,
-        bairro, cidade, estado, ativo, data, foto) {
+    function mostrar(descricao, paciente, valor, data_vencimento, data_lancamento, data_pagamento, forma_pagamento, frequencia, obs, arquivo, referencia, 
+                    id_referencia, multa, juros, desconto, subtotal) {
 
         // Dados básicos
-        $('#nome_dados-cli').text(nome);
-        $('#email_dados-cli').text(email); // ← Adicionar este campo no modal (veja abaixo)
-        $('#cpf_dados-cli').text(cpf);
-        $('#telefone_dados-cli').text(telefone);
-        $('#cargo_dados-cli').text(cargo_nome); // ← Adicionar este campo no modal (veja abaixo)
+        $('#descricao_dados-cli').text(descricao);
+        $('#paciente_dados-cli').text(paciente);
+        $('#valor_dados-cli').text(valor);
+        $('#vencimento_dados-cli').text(data_vencimento);
+        $('#lancamento_dados-cli').text(data_lancamento);
+        $('#pagamento_dados-cli').text(data_pagamento);
+        $('#forma_pagamento_dados-cli').text(forma_pagamento);
+        $('#frequencia_dados-cli').text(frequencia);
+        $('#obs_dados-cli').text(obs);
+        $('#referencia_dados-cli').text(referencia);
+        $('#multa_dados-cli').text(multa);
+        $('#juros_dados-cli').text(juros);
+        $('#desconto_dados-cli').text(desconto);
+        $('#subtotal_dados-cli').text(subtotal);
 
-
-        // Endereço
-        $('#cep_dados-cli').text(cep); // ← Corrigido: era 'ep_dados-cli'
-        $('#rua_dados-cli').text(rua);
-        $('#numero_dados-cli').text(numero);
-        $('#bairro_dados-cli').text(bairro);
-        $('#cidade_dados-cli').text(cidade);
-        $('#estado_dados-cli').text(estado);
-
-        // Status e data
-        $('#ativo_dados-cli').text(ativo);
-        $('#data_dados-cli').text(data); // ← Corrigido: era '.text(ativo)'
+        // Arquivo
+        if (arquivo && arquivo !== 'sem-arquivo.jpg') {
+            $('#target-arquivo-dados').attr('src', 'images/receber/' + arquivo);
+            $('#link-arquivo-dados').attr('href', 'images/receber/' + arquivo).show();
+        } else {
+            $('#target_arquivo').attr('src', 'images/receber/sem-arquivo.jpg');
+            $('#link-arquivo-dados').hide();
+        }
 
         // Foto (opcional, se quiser exibir)
         // ✅ Atualiza a foto
-        if (foto && foto !== 'sem-foto.jpg') {
-            $('#foto_dados-cli').attr('src', 'images/perfil/' + foto);
+        if (arquivo && arquivo !== 'sem-foto.png') {
+            $('#target_arquivo').attr('src', 'images/receber/' + arquivo);
         } else {
-            $('#foto_dados-cli').attr('src', 'images/perfil/sem-foto.jpg');
+            $('#target_arquivo').attr('src', 'images/receber/sem-foto.jpg');
         }
 
         // Abre o modal CORRETO
@@ -257,30 +273,27 @@ HTML;
     }
 
     function limparCampos() {
-        // Dados básicos
         $('#id').val('');
-        $('#nome-perfil').val('');
-        $('#email-perfil').val('');
-        $('#senha-perfil').val('');
-        $('#conf-senha-perfil').val('');
-        $('#telefone-perfil').val('');
-        $('#cpf-perfil').val('');
-
-        // Endereço
-        $('#cep-perfil').val('');
-        $('#rua-perfil').val('');
-        $('#numero-perfil').val('');
-        $('#bairro-perfil').val('');
-        $('#cidade-perfil').val('');
-        $('#estado-perfil').val('');
-
-        // Cargo/Nível e status (reseta para o primeiro option)
-        $('#nivel').prop('selectedIndex', 0).change();
-        $('#ativo').val('Sim').change();
+        $('#descricao-perfil').val('');
+        $('#paciente-perfil').val('');
+        $('#valor-conta').val('');
+        $('#vencimento-conta').val('');
+        $('#lancamento-conta').val('');
+        $('#pagamento-conta').val('');
+        $('#forma_pagamento').val('');
+        $('#frequencia').val('');
+        $('#obs-perfil').val('');
+        $('#arquivo-conta').val('');
+        $('#referencia-perfil').val('');
+        $('#id-referencia-perfil').val('');
+        $('#multa').val('');
+        $('#juros').val('');
+        $('#desconto').val('');
+        $('#subtotal').val('');
 
         // Foto (reseta input file e preview)
-        $('#foto-perfil').val('');
-        $('#target-usu').attr('src', 'images/perfil/sem-foto.jpg');
+        $('#arquivo-conta').val('');
+        $('#target-arquivo').attr('src', 'images/receber/sem-foto.jpg');
 
         // Mensagem de erro/sucesso
         $('#mensagem').text('').removeClass('text-danger');

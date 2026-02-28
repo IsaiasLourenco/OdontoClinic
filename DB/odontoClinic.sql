@@ -85,3 +85,35 @@ CREATE TABLE pacientes (
     cidade VARCHAR(100) DEFAULT NULL,
     estado VARCHAR(2) DEFAULT NULL
 );
+
+CREATE TABLE receber (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    descricao VARCHAR(100) NOT NULL,
+    paciente INT DEFAULT NULL,
+    valor DECIMAL(10,2) DEFAULT NULL,
+    data_vencimento DATE DEFAULT NULL,
+    data_pagamento DATE NOT NULL,
+    data_lancamento DATE DEFAULT NULL,
+    forma_pagamento INT DEFAULT NULL,
+    frequencia INT DEFAULT NULL,
+    obs VARCHAR(100) DEFAULT NULL,
+    arquivo VARCHAR(100) DEFAULT NULL,
+    referencia VARCHAR(30) DEFAULT NULL,
+    id_referencia INT DEFAULT NULL,
+    multa DECIMAL(10,2) DEFAULT NULL,
+    juros DECIMAL(10,2) DEFAULT NULL,
+    desconto DECIMAL(10,2) DEFAULT NULL,
+    subtotal DECIMAL(10,2) DEFAULT NULL
+);
+
+CREATE TABLE forma_pagamento (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    taxa INT DEFAULT NULL
+);
+
+CREATE TABLE frequencias (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    frequencia VARCHAR(50) NOT NULL,
+    dias INT DEFAULT NULL
+);

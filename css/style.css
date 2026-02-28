@@ -105,3 +105,9 @@ body {
   font-size: 10px;
   color: red;
 }
+
+.centro {
+  display: block;
+  text-align: center;
+  margin-top: 22px;
+}

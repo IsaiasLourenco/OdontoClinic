@@ -3,6 +3,8 @@
     require_once("../conexao.php");
     require_once("verificar.php");
 
+    $data_atual = date('Y-m-d');
+
     // Valores padrão: Admin vê tudo
     $home = '';
     $configuracoes = '';
@@ -10,6 +12,8 @@
     $grupo_acessos = '';
     $acessos = '';
     $cargos = '';
+    $forma_pagamento = '';
+    $frequencias = '';
     $pagar = '';
     $receber = '';
     $menu_pessoas = '';
@@ -212,6 +216,12 @@
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </a>
                                     <ul class="treeview-menu">
+                                        <?php if ($forma_pagamento != 'ocultar') { ?>
+                                            <li><a href="index.php?pagina=forma_pagamento"><i class="fa fa-angle-right"></i> Formas Pagto</a></li>
+                                        <?php } ?>
+                                        <?php if ($frequencias != 'ocultar') { ?>
+                                            <li><a href="index.php?pagina=frequencias"><i class="fa fa-angle-right"></i> Frequências</a></li>
+                                        <?php } ?>
                                         <?php if ($cargos != 'ocultar') { ?>
                                             <li><a href="index.php?pagina=cargos"><i class="fa fa-angle-right"></i> Cargos</a></li>
                                         <?php } ?>
@@ -735,6 +745,22 @@
         function carregarImgPaciente() {
             var target = document.getElementById('target-paciente');
             var file = document.querySelector("#foto-paciente").files[0];
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                target.src = reader.result;
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                target.src = "";
+            }
+        }
+    </script>
+    
+    <script type="text/javascript">
+        function carregarImgReceber() {
+            var target = document.getElementById('target-arquivo');
+            var file = document.querySelector("#arquivo-conta").files[0];
             var reader = new FileReader();
             reader.onloadend = function() {
                 target.src = reader.result;

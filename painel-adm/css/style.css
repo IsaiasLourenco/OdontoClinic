@@ -4053,6 +4053,11 @@ ul.bt-list li a {
 .centro {
   display: block;
   text-align: center;
+  margin-top: 22px;
+}
+
+.mt-22 {
+    margin-top: 22px;
 }
 
 .tabela-pequena {

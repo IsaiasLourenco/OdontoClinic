@@ -12,6 +12,11 @@ $usuarios = 'ocultar';
 $grupo_acessos = 'ocultar';
 $acessos = 'ocultar';
 $cargos = 'ocultar';
+$pagar = 'ocultar';
+$receber = 'ocultar';
+$menu_pessoas = 'ocultar';
+$menu_cadastros = 'ocultar';
+$menu_financeiro = 'ocultar';
 $perfil_modal = 'ocultar';
 
 // Busca permissões do usuário
@@ -41,6 +46,10 @@ if ($total_permissoes > 0) {
                 $acessos = '';
             } else if ($chave_acesso == 'cargos') {
                 $cargos = '';
+            } else if ($chave_acesso == 'pagar') {
+                $pagar = '';
+            } else if ($chave_acesso == 'receber') {
+                $receber = '';
             } else if ($chave_acesso == 'perfil') {
                 $perfil_modal = '';  // ← Controla modal Perfil
             }
